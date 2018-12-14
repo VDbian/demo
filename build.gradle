@@ -1,0 +1,105 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import java.text.SimpleDateFormat
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+ext {
+    MINSDK_VERSION = 16
+    TARGETSDK_VERSION = 26
+    COMPILESDK_VERSION = 27
+    VERSION_NAME = "1.2"
+
+    XRECYCLERVIEW_VERSION = "1.5.9"
+    GLIDE_VERSION = "4.7.1"
+    EVENTBUS_VERSION = "3.0.0"
+    SUPPORT_VERSION = "27.1.1"
+    JUNIT_VERSION = "4.12"
+//    TEST_RUNNER_VERSION = "1.0.1"
+    CONSTRAINT_LAYOUT_VERSION = "1.0.2"
+    DAGGER_VERSION = "2.11"
+    RECYCLERVIEW_VERSION = "26.+"
+//    LITEPAL_VERSION = "2.0.0"
+    GRANTOR_VERSION = "2.4"
+    RUNNER_VERSION = "1.0.1"
+    ESPRESSCO_VERSION = "3.0.1"
+    RXJAVA_VERSION = "2.1.1"
+    RXANDROID_VERSION = "2.0.1"
+    OKHTTP_VERSION = "3.8.1"
+    RETROFIT_VERSION = "2.3.0"
+    BARLIBRARY_VERSION = "2.3.0"
+    MULTIDEX_VERSION = "1.0.1"
+    RXPREFERENCES_VERSION = "2.0.0"
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("dependencies")) {
+            dependencies {
+                implementation fileTree(dir: 'libs', include: ['*.jar'])
+                implementation "com.android.support:appcompat-v7:${SUPPORT_VERSION}"
+                implementation "com.android.support:recyclerview-v7:${RECYCLERVIEW_VERSION}"
+                //面向AOP依赖注入框架
+                implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+                annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+                //网络
+                implementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+                implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+                implementation "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+                implementation "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT_VERSION}"
+                //rxjava2
+                implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
+                implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
+                //orm本地数据库
+                //本地数据库litepal
+//                implementation "org.litepal.android:core:${LITEPAL_VERSION}"
+                //glide
+                implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+
+                testImplementation "junit:junit:${JUNIT_VERSION}"
+                androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
+                androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSCO_VERSION}"
+            }
+        }
+    }
+}
+
+def getVersionName() {
+    return String.format("%s.%d", rootProject.ext.VERSION_NAME, getVersionCode())
+}
+
+// 读取版本号
+def getVersionCode() {
+    def n = Long.parseLong(new Date().format("yyMMddHHmmss"))
+    def s = Long.parseLong(new SimpleDateFormat("yyMMddHHmmss").parse("170724140000").format("yyMMddHHmmss"))
+    def versionCode = (Integer) (n - s)
+    return versionCode
+}

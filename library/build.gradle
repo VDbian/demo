@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.COMPILESDK_VERSION
+    defaultConfig {
+        minSdkVersion rootProject.ext.MINSDK_VERSION
+        targetSdkVersion rootProject.ext.TARGETSDK_VERSION
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField("boolean", "LOG_DEBUG", "true")
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    //沉浸式状态栏
+    implementation "com.gyf.barlibrary:barlibrary:${BARLIBRARY_VERSION}"
+    //Multidex突破64K方法数限制
+    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
+    //本地Preference (原引用compile "com.cocosw:favor:0.2.0@aar",现cn.com.ssii.core.favor,开放继承Preference的接口使用权限,以及底层RxPreference改为raxjava2.x版本)
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:${RXPREFERENCES_VERSION}"
+    //recyclerview
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_VERSION}"
+    //photoView
+//    implementation "com.github.chrisbanes:PhotoView:${PHOTOVIEW_VERSION}"
+    //全局字体替换
+//    implementation "uk.co.chrisjenx:calligraphy:${CALLIGRAPHY_VERSION}"
+}

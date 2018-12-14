@@ -1,0 +1,126 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.TARGETSDK_VERSION
+    defaultConfig {
+        applicationId "cn.com.ssii.college"
+        minSdkVersion rootProject.ext.MINSDK_VERSION
+        targetSdkVersion rootProject.ext.TARGETSDK_VERSION
+        versionCode rootProject.getVersionCode()
+        versionName rootProject.getVersionName()
+        flavorDimensions "" + versionCode
+        manifestPlaceholders = [APPLICATION_ID: applicationId]
+        buildConfigField "boolean", "IS_JUST_TEST", "false"
+        buildConfigField "String", "API_ROOT", "\"https://rdc.ssii.com.cn/apis/train/v1/\""
+//        versionName = rootProject.getVersionName()
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../aknowledge.jks')
+            storePassword "dspkc12kDoyu"
+            keyAlias "nzh-app"
+            keyPassword "123456"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                output ->
+                    if (outputFileName !=null && outputFileName.endsWith('.apk')) {
+                        def fileName = outputFileName.replace("app","college")
+                        outputFileName = fileName
+                    }
+            }
+    }
+
+    productFlavors {
+        dev {
+            applicationId "cn.com.ssii.aknowledge.dev"
+            resValue "string", "app_name", "空间学院dev"
+            manifestPlaceholders = [APPLICATION_ID: applicationId]
+            buildConfigField "boolean", "IS_JUST_TEST", "true"
+            buildConfigField "String", "API_ROOT", "\"https://rdc.ssii.com.cn/apis/train/dev/v1/\""
+            buildConfigField "String", "COURSE_INFO_URL", "\"https://rdc.ssii.com.cn/online/train/dev/school/#/appCourse/\""
+        }
+
+        offline {
+            applicationId "cn.com.ssii.aknowledge.test"
+            resValue "string", "app_name", "空间学院test"
+            manifestPlaceholders = [APPLICATION_ID: applicationId]
+            buildConfigField "boolean", "IS_JUST_TEST", "true"
+            buildConfigField "String", "API_ROOT", "\"https://rdc.ssii.com.cn/apis/train/test/v1/\""
+            buildConfigField "String", "COURSE_INFO_URL", "\"https://rdc.ssii.com.cn/online/train/test/school/#/appCourse/\""
+        }
+
+        pre {
+            applicationId "cn.com.ssii.aknowledge"
+            resValue "string", "app_name", "空间学院pre"
+            manifestPlaceholders = [APPLICATION_ID: applicationId]
+            buildConfigField "boolean", "IS_JUST_TEST", "true"
+            buildConfigField "String", "API_ROOT", "\"https://rdc.ssii.com.cn/apis/train/pre/v1/\""
+            buildConfigField "String", "COURSE_INFO_URL", "\"https://rdc.ssii.com.cn/online/train/pre/school/#/appCourse/\""
+        }
+
+        prod {
+            versionName = "v" + defaultConfig.versionName
+            resValue "string", "app_name", "空间学院"
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':library')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+    implementation "com.jcodecraeer:xrecyclerview:${XRECYCLERVIEW_VERSION}"
+    //design包
+    implementation "com.android.support:design:${SUPPORT_VERSION}"
+    //动态申请权限
+    implementation "com.github.dfqin:grantor:${GRANTOR_VERSION}"
+
+    //eventbus
+    implementation "org.greenrobot:eventbus:${EVENTBUS_VERSION}"
+
+}
